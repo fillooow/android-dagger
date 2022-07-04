@@ -1,6 +1,7 @@
 package com.example.android.dagger.di
 
 import android.content.Context
+import com.example.android.dagger.login.LoginSubcomponent
 import com.example.android.dagger.main.MainActivity
 import com.example.android.dagger.registration.RegistrationSubcomponent
 import dagger.BindsInstance
@@ -23,7 +24,8 @@ interface AppComponent {
         fun create(@BindsInstance context: Context): AppComponent
     }
 
-    // Expose RegistrationSubcomponent factory from the graph
+    // Expose Subcomponents factories from the graph
+    fun loginComponent(): LoginSubcomponent.Factory
     fun registrationComponent(): RegistrationSubcomponent.Factory
 
     fun inject(activity: MainActivity)
