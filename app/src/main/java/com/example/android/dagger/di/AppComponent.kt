@@ -4,6 +4,9 @@ import android.content.Context
 import com.example.android.dagger.login.LoginSubcomponent
 import com.example.android.dagger.main.MainActivity
 import com.example.android.dagger.registration.RegistrationSubcomponent
+import com.example.android.dagger.settings.SettingsActivity
+import com.example.android.dagger.user.UserManager
+import com.example.android.dagger.user.UserSubcomponent
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
@@ -28,5 +31,9 @@ interface AppComponent {
     fun loginComponent(): LoginSubcomponent.Factory
     fun registrationComponent(): RegistrationSubcomponent.Factory
 
-    fun inject(activity: MainActivity)
+    /**
+     * Expose [UserManager] so that [MainActivity] and [SettingsActivity]
+     * can access a particular instance of [UserSubcomponent]
+     * */
+    fun userManager(): UserManager
 }

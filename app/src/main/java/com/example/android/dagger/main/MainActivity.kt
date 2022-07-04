@@ -27,12 +27,10 @@ import com.example.android.dagger.login.LoginActivity
 import com.example.android.dagger.registration.RegistrationActivity
 import com.example.android.dagger.settings.SettingsActivity
 import com.example.android.dagger.user.UserManager
+import com.example.android.dagger.user.UserSubcomponent
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
-
-    @Inject
-    lateinit var userManager: UserManager
 
     @Inject
     lateinit var mainViewModel: MainViewModel
@@ -44,9 +42,9 @@ class MainActivity : AppCompatActivity() {
      */
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        (application as MyApplication).appComponent.inject(this)
-
         super.onCreate(savedInstanceState)
+
+        val userManager = (application as MyApplication).appComponent.userManager()
 
         when (!userManager.isUserLoggedIn()) {
 
@@ -64,7 +62,14 @@ class MainActivity : AppCompatActivity() {
             }
 
             false -> {
+
                 setContentView(R.layout.activity_main)
+
+                /**
+                 * If the [MainActivity] needs to be displayed, we get the [UserSubcomponent]
+                 * from the application graph and gets this Activity injected
+                 * */
+                userManager.userSubcomponent!!.inject(this)
 
                 setupViews()
             }
