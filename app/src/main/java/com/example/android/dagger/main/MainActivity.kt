@@ -26,10 +26,14 @@ import com.example.android.dagger.R
 import com.example.android.dagger.login.LoginActivity
 import com.example.android.dagger.registration.RegistrationActivity
 import com.example.android.dagger.settings.SettingsActivity
+import com.example.android.dagger.user.UserManager
+import com.example.android.dagger.user.UserSubcomponent
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var mainViewModel: MainViewModel
+    @Inject
+    lateinit var mainViewModel: MainViewModel
 
     /**
      * If the User is not registered, RegistrationActivity will be launched,
@@ -37,22 +41,38 @@ class MainActivity : AppCompatActivity() {
      * else carry on with MainActivity
      */
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
 
-        val userManager = (application as MyApplication).userManager
-        if (!userManager.isUserLoggedIn()) {
-            if (!userManager.isUserRegistered()) {
-                startActivity(Intent(this, RegistrationActivity::class.java))
-                finish()
-            } else {
-                startActivity(Intent(this, LoginActivity::class.java))
-                finish()
-            }
-        } else {
-            setContentView(R.layout.activity_main)
+        val userManager = (application as MyApplication).appComponent.userManager()
 
-            mainViewModel = MainViewModel(userManager.userDataRepository!!)
-            setupViews()
+        when (!userManager.isUserLoggedIn()) {
+
+            true -> when (userManager.isUserRegistered()) {
+
+                true -> {
+                    startActivity(Intent(this, LoginActivity::class.java))
+                    finish()
+                }
+
+                false -> {
+                    startActivity(Intent(this, RegistrationActivity::class.java))
+                    finish()
+                }
+            }
+
+            false -> {
+
+                setContentView(R.layout.activity_main)
+
+                /**
+                 * If the [MainActivity] needs to be displayed, we get the [UserSubcomponent]
+                 * from the application graph and gets this Activity injected
+                 * */
+                userManager.userSubcomponent!!.inject(this)
+
+                setupViews()
+            }
         }
     }
 

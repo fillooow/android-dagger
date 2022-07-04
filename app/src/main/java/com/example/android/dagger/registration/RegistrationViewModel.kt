@@ -16,13 +16,21 @@
 
 package com.example.android.dagger.registration
 
+import com.example.android.dagger.di.ActivityScope
 import com.example.android.dagger.user.UserManager
+import javax.inject.Inject
+
 
 /**
  * RegistrationViewModel is the ViewModel that the Registration flow ([RegistrationActivity]
  * and fragments) uses to keep user's input data.
+ *
+ * [Inject] tells Dagger:
+ * - how to create instance of class with [RegistrationViewModel] type
+ * - [RegistrationViewModel] has [UserManager] as dependency
  */
-class RegistrationViewModel(val userManager: UserManager) {
+@ActivityScope
+class RegistrationViewModel @Inject constructor(val userManager: UserManager) {
 
     private var username: String? = null
     private var password: String? = null
