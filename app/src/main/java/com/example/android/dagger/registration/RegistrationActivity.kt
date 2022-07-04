@@ -28,13 +28,17 @@ import javax.inject.Inject
 
 class RegistrationActivity : AppCompatActivity() {
 
+    // For access in fragments
+    lateinit var registrationSubcomponent: RegistrationSubcomponent
+
     @Inject
     lateinit var registrationViewModel: RegistrationViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
         // Ask Dagger to inject dependencies
-        (application as MyApplication).appComponent.registrationComponent().create().inject(this)
+        registrationSubcomponent = (application as MyApplication).appComponent.registrationComponent().create()
+        registrationSubcomponent.inject(this)
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registration)
