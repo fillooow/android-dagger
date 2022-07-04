@@ -2,7 +2,7 @@ package com.example.android.dagger.di
 
 import android.content.Context
 import com.example.android.dagger.main.MainActivity
-import com.example.android.dagger.registration.RegistrationActivity
+import com.example.android.dagger.registration.RegistrationSubcomponent
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
@@ -10,7 +10,8 @@ import javax.inject.Singleton
 @Singleton
 @Component(
     modules = [
-        StorageModule::class
+        StorageModule::class,
+        AppSubcomponentsModule::class
     ]
 )
 interface AppComponent {
@@ -22,7 +23,8 @@ interface AppComponent {
         fun create(@BindsInstance context: Context): AppComponent
     }
 
-    // Classes that can be injected by this Component
-    fun inject(activity: RegistrationActivity)
+    // Expose RegistrationSubcomponent factory from the graph
+    fun registrationComponent(): RegistrationSubcomponent.Factory
+
     fun inject(activity: MainActivity)
 }
